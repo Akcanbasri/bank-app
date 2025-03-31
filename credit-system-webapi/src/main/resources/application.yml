@@ -16,7 +16,13 @@ spring:
 server:
   port: 8080
 
+# JWT Config
+banking:
+  app:
+    jwtSecret: 8bEKNDzKrTSuT8zLTKJ3v4ndXwndMfLrb3MnhXdxGqLDShYR8ntbKC9BfCcDQc3n
+    jwtExpirationMs: 86400000
+
 logging:
   level:
     org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE 
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
