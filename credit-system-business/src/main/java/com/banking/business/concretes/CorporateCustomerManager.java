@@ -6,6 +6,8 @@ import com.banking.business.dtos.requests.CreateCorporateCustomerRequest;
 import com.banking.business.dtos.responses.CorporateCustomerResponse;
 import com.banking.business.mappings.CorporateCustomerMapper;
 import com.banking.business.rules.CorporateCustomerBusinessRules;
+import com.banking.core.paging.Page;
+import com.banking.core.paging.PageRequest;
 import com.banking.entities.CorporateCustomer;
 import com.banking.repositories.abstracts.CorporateCustomerRepository;
 import lombok.AllArgsConstructor;
@@ -38,6 +40,22 @@ public class CorporateCustomerManager implements CorporateCustomerService {
         return customers.stream()
                 .map(mapper::toResponse)
                 .toList();
+    }
+
+    @Override
+    public Page<CorporateCustomerResponse> getAll(PageRequest pageRequest) {
+        org.springframework.data.domain.Page<CorporateCustomer> pageData = corporateCustomerRepository
+                .findAll(pageRequest.getPageable());
+
+        List<CorporateCustomerResponse> responses = pageData.getContent()
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
+
+        return Page.from(new org.springframework.data.domain.PageImpl<>(
+                responses,
+                pageData.getPageable(),
+                pageData.getTotalElements()));
     }
 
     @Override

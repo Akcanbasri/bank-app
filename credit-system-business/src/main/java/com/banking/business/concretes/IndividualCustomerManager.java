@@ -6,6 +6,8 @@ import com.banking.business.dtos.requests.CreateIndividualCustomerRequest;
 import com.banking.business.dtos.responses.IndividualCustomerResponse;
 import com.banking.business.mappings.IndividualCustomerMapper;
 import com.banking.business.rules.IndividualCustomerBusinessRules;
+import com.banking.core.paging.Page;
+import com.banking.core.paging.PageRequest;
 import com.banking.entities.IndividualCustomer;
 import com.banking.repositories.abstracts.IndividualCustomerRepository;
 import lombok.AllArgsConstructor;
@@ -37,6 +39,22 @@ public class IndividualCustomerManager implements IndividualCustomerService {
         return customers.stream()
                 .map(mapper::toResponse)
                 .toList();
+    }
+
+    @Override
+    public Page<IndividualCustomerResponse> getAll(PageRequest pageRequest) {
+        org.springframework.data.domain.Page<IndividualCustomer> pageData = individualCustomerRepository
+                .findAll(pageRequest.getPageable());
+
+        List<IndividualCustomerResponse> responses = pageData.getContent()
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
+
+        return Page.from(new org.springframework.data.domain.PageImpl<>(
+                responses,
+                pageData.getPageable(),
+                pageData.getTotalElements()));
     }
 
     @Override
